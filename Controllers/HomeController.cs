@@ -30,28 +30,27 @@ namespace TodoConsumeAPI.Controllers
             clientHandler.ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; };
 
             List<TodoItem> TodoItems = new List<TodoItem>();
-            // Pass the handler to httpclient(from you are calling api) again to avoid untrusted root
+            // Pass the handler to httpclient to avoid untrusted root
             using (var client = new HttpClient(clientHandler))
             {
-                //Passing service base url
+                // Pass service base url
                 client.BaseAddress = new Uri(Baseurl);
                 client.DefaultRequestHeaders.Clear();
-                //Define request data format
+                // Define request data format
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                //Sending request to find web api REST service resource GetAllEmployees using HttpClient
+                // Send request to web api REST service method GetTodoItems using HttpClient
                 HttpResponseMessage Res = await client.GetAsync("api/todoitems");
-                //Checking the response is successful or not which is sent using HttpClient
+                // Check result
                 if (Res.IsSuccessStatusCode)
                 {
-                    //Storing the response details recieved from web api
+                    //Store the response details recieved from web api
                     var Response = Res.Content.ReadAsStringAsync().Result;
-                    //Deserializing the response recieved from web api and storing into the Employee list
+                    //Deserialize response recieved from web api and store into TodoItems list
                     TodoItems = JsonConvert.DeserializeObject<List<TodoItem>>(Response);
                 }
-                //returning the employee list to view
+                // Pass list to view
                 return View(TodoItems);
             }
-            //return View();
         }
 
 
